@@ -1,0 +1,37 @@
+apply plugin: 'java'
+
+defaultTasks 'clean', 'build'
+
+repositories {
+    mavenCentral()
+    jcenter()
+
+    maven {
+        url "https://repository.jboss.org/nexus/content/groups/public/"
+    }
+}
+
+def versionArquillian = "1.1.4.Final"
+def versionArquillianContainerJBossManaged = "7.2.0.Final"
+def versionJbossEJB = "1.0.2.Final"
+def versionJunit = "4.+"
+
+ext.libraries = [
+        jboss_ejb                         : "org.jboss.spec.javax.ejb:jboss-ejb-api_3.1_spec:$versionJbossEJB",
+        junit                             : "junit:junit:$versionJunit",
+        arquillian                        : [
+                "org.jboss.arquillian:arquillian-bom:$versionArquillian",
+                "org.jboss.arquillian.junit:arquillian-junit-container:$versionArquillian",
+                "org.jboss.arquillian.protocol:arquillian-protocol-servlet:$versionArquillian"
+        ],
+        arquillian_container_jboss_managed: "org.jboss.as:jboss-as-arquillian-container-managed:$versionArquillianContainerJBossManaged",
+]
+
+dependencies {
+    compile libraries.jboss_ejb
+    testCompile libraries.junit
+    testCompile libraries.arquillian
+    testCompile libraries.arquillian_container_jboss_managed
+}
+
+test { testLogging.showStandardStreams = true }
